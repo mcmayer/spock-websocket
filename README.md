@@ -38,7 +38,7 @@ wsApp :: ServerApp
 	counter conn 1
 ```
 
-and `go` is an endless recursion (loop) that just counts up:
+and `counter` is an endless recursion (loop) that just counts up:
 
 ```haskell
 counter :: Connection -> Int -> IO ()
