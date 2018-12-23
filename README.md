@@ -2,6 +2,8 @@
 
 This is a simple proof-of-concept web app that demonstrates the use of [websockets](https://en.wikipedia.org/wiki/WebSocket) with the [Haskell](https://haskell.org/) [Spock](http://spock.li) library.
 
+![animated gif](spock-websockets.gif)
+
 #### Main libraries used
 
 - [Spock](http://spock.li), a lightweight [Haskell](https://haskell.org/) web framework
@@ -59,7 +61,3 @@ runSpock 8080 (spock spockConfig (appMiddlewares >> app))
 #### Demo
 
 The source code contains a simple demo that streams the sequence of numbers that are displayed in the browser with a visual gimmick.
-
-
-
-![animated gif](spock-websockets.gif)
