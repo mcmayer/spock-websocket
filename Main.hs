@@ -37,13 +37,13 @@ type MyAppState = ()
 main :: IO ()
 main = do
     spockConfig <- defaultSpockCfg EmptySession PCNoDatabase ()
-    runSpock 8080 (spock spockConfig (appMiddleware >> app))
+    runSpock 8080 (spock spockConfig (appMiddlewares >> app))
 
-appMiddleware :: Web.Spock.Core.SpockCtxT () (WebStateM () MySession MyAppState) ()
-appMiddleware = do
-    middleware logStdoutDev
-    middleware (staticPolicy $ noDots >-> addBase "static")
-    middleware wsMiddleware
+appMiddlewares :: Web.Spock.Core.SpockCtxT () (WebStateM () MySession MyAppState) ()
+appMiddlewares = do
+    middleware logStdoutDev                                     -- add logging
+    middleware (staticPolicy $ noDots >-> addBase "static")     -- add static files
+    middleware wsMiddleware                                     -- add websocket
 
 wsMiddleware :: Middleware
 wsMiddleware =  websocketsOr defaultConnectionOptions wsApp
@@ -51,17 +51,17 @@ wsMiddleware =  websocketsOr defaultConnectionOptions wsApp
         wsApp :: ServerApp
         wsApp pendingConn = do
             conn <- acceptRequest pendingConn
-            forkPingThread conn 30
+            forkPingThread conn 30  -- not needed here, but good to have in most other situations
             sendTextData conn ("..." :: Text)
-            go conn 1
-        go :: Connection -> Int -> IO ()
-        go conn i = do
-            threadDelay 150000   -- 50ms
+            counter conn 1
+        counter :: Connection -> Int -> IO ()
+        counter conn i = do
+            threadDelay 50000   -- 50ms
             sendTextData conn (T.pack $ show i)
-            go conn (i + 1)
+            counter conn (i + 1)
         
 app :: SpockM () MySession MyAppState ()
-app = get root action
+app = get root action   -- there's only one route in this app
 
 content :: H.Html
 content = 
