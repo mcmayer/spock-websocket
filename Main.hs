@@ -1,35 +1,28 @@
-{-# LANGUAGE OverloadedStrings, TypeOperators, DataKinds #-}
+{-# LANGUAGE DataKinds         #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TypeOperators     #-}
 module Main where
 
-import           Web.Spock as Sp
-import           Web.Spock.Core (SpockCtxT)
-import           Web.Spock.Config
-import           Data.Monoid
-import qualified Data.Text as T
-import           Data.Text (Text)
-import qualified Data.Text.Lazy as TL
-import           Control.Monad.IO.Class (liftIO)
-import           Control.Monad (void)
-import           Control.Exception (AsyncException, fromException, throwIO, handle)
-import           Control.Concurrent (forkIO, threadDelay)
+import           Control.Concurrent                   (forkIO, threadDelay)
+import           Control.Exception                    (AsyncException,
+                                                       fromException, handle,
+                                                       throwIO)
+import           Control.Monad                        (void)
+import           Data.Text                            (Text)
+import qualified Data.Text                            as T
+import qualified Data.Text.Lazy                       as TL
+import           Network.Wai                          (Application, Middleware)
 import           Network.Wai.Handler.WebSockets
-import           Network.Wai (Application, Middleware)
 import           Network.Wai.Middleware.RequestLogger (logStdoutDev)
 import           Network.Wai.Middleware.Static
 import           Network.WebSockets
 import           Text.Blaze.Html.Renderer.Text        (renderHtml)
-import           Text.Blaze.Html5                     (dataAttribute, h1, h2,
-                                                       h3, h4, h5, img, li,
-                                                       link, meta, nav, ul, (!))
+import           Text.Blaze.Html5                     ((!))
 import qualified Text.Blaze.Html5                     as H
-import           Text.Blaze.Html5.Attributes          (alt, class_, height,
-                                                       href, role, src, style,
-                                                       target, width)
 import qualified Text.Blaze.Html5.Attributes          as A
-import           Debug.Trace (trace)
-
-tr :: Show a => a -> a
-tr a = trace (show a) a
+import           Web.Spock                            as Sp
+import           Web.Spock.Config                     as Sp
+import           Web.Spock.Core                       (SpockCtxT)
 
 data MySession = EmptySession
 type MyAppState = ()
@@ -59,20 +52,20 @@ wsMiddleware =  websocketsOr defaultConnectionOptions wsApp
             threadDelay 50000   -- 50ms
             sendTextData conn (T.pack $ show i)
             counter conn (i + 1)
-        
+
 app :: SpockM () MySession MyAppState ()
 app = get root action   -- there's only one route in this app
 
 content :: H.Html
-content = 
+content =
     H.docTypeHtml ! A.lang "en" $ do
         H.head $ do
-            meta ! A.charset "utf-8"
+            H.meta ! A.charset "utf-8"
             H.title "Spock Websockets"
-            H.script ! A.type_ "text/javascript" ! src "ws.js" $ mempty
-            link ! A.type_ "text/css" ! A.rel "stylesheet" ! href "ws.css"
+            H.script ! A.type_ "text/javascript" ! A.src "ws.js" $ mempty
+            H.link ! A.type_ "text/css" ! A.rel "stylesheet" ! A.href "ws.css"
         H.body $ do
-            h1 "Spock Websockets"
+            H.h1 "Spock Websockets"
             H.p $ do
                 "Counter: "
                 H.span ! A.id "counter" $ mempty
@@ -81,5 +74,3 @@ content =
 
 action :: ActionCtxT ctx (WebStateM () MySession MyAppState) a
 action = (Sp.html . TL.toStrict . renderHtml) content
-
-    
