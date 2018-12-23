@@ -1,0 +1,44 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.1.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: c04aeb5d55174ab0014da5d543dcdfb3b25631761e2a0c85ba525ea23cbd31b3
+
+name:           spock-websocket
+version:        0.1.0.0
+description:    Proof-of-concept web app to demonstrate websockets with Spock
+homepage:       https://github.com/mcmayer/spock-websocket#readme
+bug-reports:    https://github.com/mcmayer/spock-websocket/issues
+author:         Markus Mayer
+maintainer:     mmayer@mayeranalytics.com
+copyright:      Markus Mayer
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    ChangeLog.md
+
+source-repository head
+  type: git
+  location: https://github.com/mcmayer/spock-websocket
+
+executable spock-websocket
+  main-is: Main.hs
+  other-modules: 
+  hs-source-dirs: .
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , Spock
+    , Spock-core
+    , text
+    , wai
+    , wai-websockets
+    , wai-extra
+    , wai-middleware-static
+    , websockets
+    , blaze-html
+  default-language: Haskell2010
