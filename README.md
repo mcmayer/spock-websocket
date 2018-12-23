@@ -17,7 +17,7 @@ The source code contains a simple demo that streams the sequence of numbers that
 
 The key thing to realize is that [websocketsOr](https://hackage.haskell.org/package/wai-websockets-3.0.1.2/docs/Network-Wai-Handler-WebSockets.html#v:websocketsOr) produces a [Middleware](https://hackage.haskell.org/package/wai-3.2.1.2/docs/Network-Wai.html#t:Middleware) that can be supplied to [runSpock](https://spockdocs.s3.eu-central-1.amazonaws.com/Spock-0.12.0.1/Web-Spock.htm#v:runSpockl).
 
-##### Middleware
+#### Middleware
 
 Middleware is a component that sits between the server and application:
 
@@ -42,7 +42,7 @@ wsApp :: ServerApp
 	counter conn 1
 ```
 
-##### Counter
+#### Counter
 
 The `counter` is an endless recursion (loop) that just counts up:
 
@@ -62,7 +62,7 @@ appMiddlewares = do
     middleware wsMiddleware
 ```
 
-##### Start Spock
+#### Start Spock
 
 Now all is ready to start the server:
 
